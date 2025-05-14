@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ProyectoIA": {
+    "Front-end": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/proyecto-ia",
+            "outputPath": "dist/front-end",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -62,10 +62,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "ProyectoIA:build:production"
+              "buildTarget": "Front-end:build:production"
             },
             "development": {
-              "buildTarget": "ProyectoIA:build:development"
+              "buildTarget": "Front-end:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -73,7 +73,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "ProyectoIA:build"
+            "buildTarget": "Front-end:build"
           }
         },
         "test": {
