@@ -1,9 +1,19 @@
+/* Importar la fuente IBM Plex Mono desde Google Fonts */
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap");
+
+/* Clase para aplicar la fuente IBM Plex Mono */
+.ibm-plex-mono {
+  font-family: "IBM Plex Mono", monospace;
+  letter-spacing: -0.05em; /* Ajuste de espaciado para mejor apariencia */
+}
+
 /* Estilo para el cursor de escritura */
 .typing-cursor::after {
     content: "|";
     display: inline-block;
     animation: blink 1s step-end infinite;
     margin-left: 2px;
+    font-family: "IBM Plex Mono", monospace;
   }
   
   @keyframes blink {

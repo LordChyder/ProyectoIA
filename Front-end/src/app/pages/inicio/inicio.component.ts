@@ -32,7 +32,7 @@ export class InicioComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     // Verificar si estamos en el navegador
-    this.isBrowser = isPlatformBrowser(this.platformId)
+    this.isBrowser = isPlatformBrowser(this.platformId);
   }
 
   ngOnInit(): void {
