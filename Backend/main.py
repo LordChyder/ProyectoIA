@@ -1,29 +1,35 @@
 from preguntas_data.bloques_preguntas import bloques_preguntas
-from utils.audio_utils import grabar_audio
-from model.predict import predecir_tipo
+from utils.audio_utils import grabar_audio, transcribir_audio
 import os
+from collections import defaultdict
 
-# Carpeta donde se guardan las grabaciones
-carpeta_base = "Backend/data/grabaciones"
+# Carpeta de grabaciones
+carpeta_base = "data/grabaciones"
+respuestas = defaultdict(int)
 
-# Recorrer por bloque y tipo RIASEC
-for bloque, categorias in bloques_preguntas.items():  # ✅ FUNCIONA
-    print(f"Bloque: {bloque}")
-    for tipo, lista_preguntas in categorias.items():
+# Recorremos preguntas por bloque y tipo
+for bloque, categorias in bloques_preguntas.items():
+    print(f"\n🗂️ Bloque: {bloque}")
+    for tipo, preguntas in categorias.items():
         print(f"\n🔹 Tipo RIASEC: {tipo}")
-        for i, pregunta in enumerate(lista_preguntas, start=1):
-            print(f"\nPregunta {i}: {pregunta}")
+        for i, pregunta in enumerate(preguntas, 1):
+            print(f"Pregunta {i}: {pregunta}")
 
-            # Crear subcarpeta por bloque si no existe
-            carpeta_bloque = os.path.join(carpeta_base, bloque)
-            os.makedirs(carpeta_bloque, exist_ok=True)
+            carpeta_tipo = os.path.join(carpeta_base, bloque)
+            os.makedirs(carpeta_tipo, exist_ok=True)
+            nombre_archivo = os.path.join(carpeta_tipo, f"{bloque}_{tipo}_{i:02d}.wav")
 
-            # Definir nombre de archivo
-            nombre_archivo = os.path.join(carpeta_bloque, f"{bloque}_{tipo}_{i:02d}.wav")
-
-            # Grabar audio
             grabar_audio(nombre_archivo, duracion=5)
+            transcripcion = transcribir_audio(nombre_archivo)
 
-            # Predecir tipo RIASEC a partir de la voz
-            #tipo_detectado = predecir_tipo(nombre_archivo)
-            #print(f"🎯 Predicción IA: {tipo_detectado}")
+            print(f"📝 Transcripción: {transcripcion}")
+
+            if "sí" in transcripcion or "si" in transcripcion:
+                respuestas[tipo] += 1
+            elif "no" in transcripcion:
+                pass  # también puedes registrar "no" si deseas
+
+# Mostrar resultado final tipo Holland
+print("\n✅ Resultado final (conteo de 'sí'):")
+for tipo, cantidad in respuestas.items():
+    print(f"{tipo}: {cantidad} respuestas afirmativas")

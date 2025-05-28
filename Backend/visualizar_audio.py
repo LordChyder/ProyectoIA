@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Ruta al archivo de audio
-ruta_audio = 'Backend/data/grabaciones/PREFERENCIAS/PREFERENCIAS_R_01.wav'
+ruta_audio = 'Backend/data/grabaciones/PREFERENCIAS/PREFERENCIAS_R_02.wav'
 # Cargar audio
 y, sr = librosa.load(ruta_audio, sr=None)
 

@@ -4,7 +4,7 @@ import numpy as np
 import librosa
 
 # Ruta base donde están los audios
-ruta_audios = 'data/grabaciones'
+ruta_audios = 'Backend/data/grabaciones/PREFERENCIAS'
 
 # Lista para almacenar datos
 datos = []
