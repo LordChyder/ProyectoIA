@@ -1,30 +1,29 @@
-from grabar_audio import grabar_audio
-from extraer_features import extraer_features
-from clasificador_holland import clasificar_por_reglas, predecir_con_modelo
-from modelo_prediccion import cargar_modelo
+from preguntas_data.bloques_preguntas import bloques_preguntas
+from utils.audio_utils import grabar_audio
+from model.predict import predecir_tipo
+import os
 
-# 1. Grabar audio del usuario
-archivo = grabar_audio("respuesta_test.wav", duracion=7)
+# Carpeta donde se guardan las grabaciones
+carpeta_base = "data/grabaciones"
 
-# 2. Extraer características vocales
-features = extraer_features(archivo)
+# Recorrer por bloque y tipo RIASEC
+for bloque, categorias in bloques_preguntas.items():  # ✅ FUNCIONA
+    print(f"Bloque: {bloque}")
+    for tipo, lista_preguntas in categorias.items():
+        print(f"\n🔹 Tipo RIASEC: {tipo}")
+        for i, pregunta in enumerate(lista_preguntas, start=1):
+            print(f"\nPregunta {i}: {pregunta}")
 
-# 3. Cargar modelo entrenado
-modelo = cargar_modelo()
+            # Crear subcarpeta por bloque si no existe
+            carpeta_bloque = os.path.join(carpeta_base, bloque)
+            os.makedirs(carpeta_bloque, exist_ok=True)
 
-# 4. Clasificación por red neuronal (si el modelo existe)
-if modelo:
-    tipo, confianza, carreras = predecir_con_modelo(features, modelo)
-    print(f"\n🎯 Predicción con modelo IA:")
-    print(f"Tipo Holland: {tipo} (confianza: {confianza:.2f})")
-    print("Carreras sugeridas:")
-    for c in carreras:
-        print(f"— {c}")
-else:
-    # 5. Alternativa: usar reglas básicas si no hay modelo
-    tipo, carreras = clasificar_por_reglas(features)
-    print(f"\n🔍 Clasificación por reglas:")
-    print(f"Tipo Holland: {tipo}")
-    print("Carreras sugeridas:")
-    for c in carreras:
-        print(f"— {c}")
+            # Definir nombre de archivo
+            nombre_archivo = os.path.join(carpeta_bloque, f"{bloque}_{tipo}_{i:02d}.wav")
+
+            # Grabar audio
+            grabar_audio(nombre_archivo, duracion=5)
+
+            # Predecir tipo RIASEC a partir de la voz
+            #tipo_detectado = predecir_tipo(nombre_archivo)
+            #print(f"🎯 Predicción IA: {tipo_detectado}")
