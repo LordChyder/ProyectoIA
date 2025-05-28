@@ -1,52 +1,34 @@
 import os
 import pandas as pd
-import numpy as np
-import librosa
+from features.extract_audio_features import extract_audio_features
 
-# Ruta base donde están los audios
-ruta_audios = 'Backend/data/grabaciones/PREFERENCIAS'
+csv_path = "Backend/data/dataset_riasec_etiquetas.csv"
+grabaciones_path = "Backend/data/grabaciones"
+nuevos_datos = []
 
-# Lista para almacenar datos
-datos = []
+# Cargar dataset existente si hay
+if os.path.exists(csv_path):
+    df_existente = pd.read_csv(csv_path)
+    archivos_existentes = set(df_existente["archivo"])
+else:
+    df_existente = pd.DataFrame()
+    archivos_existentes = set()
 
-# Recorremos todos los archivos de audio
-for carpeta, _, archivos in os.walk(ruta_audios):
-    for archivo in archivos:
-        if archivo.endswith('.wav'):
-            ruta_completa = os.path.join(carpeta, archivo)
+# Recorrer todos los .wav
+for root, _, files in os.walk(grabaciones_path):
+    for file in files:
+        if file.endswith(".wav") and file not in archivos_existentes:
+            ruta = os.path.join(root, file)
+            caracteristicas = extract_audio_features(ruta)
+            etiqueta = file.split("_")[1]  # extrae R, I, A...
+            fila = {"archivo": file, "etiqueta_RIASEC": etiqueta}
+            fila.update(caracteristicas)
+            nuevos_datos.append(fila)
 
-            # Cargar audio
-            y, sr = librosa.load(ruta_completa, sr=None)
+# Crear nuevo DataFrame y unir con el anterior
+df_nuevo = pd.DataFrame(nuevos_datos)
+df_final = pd.concat([df_existente, df_nuevo], ignore_index=True)
 
-            # Extraer características
-            mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=13)
-            chroma = librosa.feature.chroma_stft(y=y, sr=sr)
-            centroid = librosa.feature.spectral_centroid(y=y, sr=sr)
-            bandwidth = librosa.feature.spectral_bandwidth(y=y, sr=sr)
-            rms = librosa.feature.rms(y=y)
-            pitch, _ = librosa.piptrack(y=y, sr=sr)
-
-            # Inferir etiqueta desde el nombre de archivo (ej: TRABAJOS_A_01.wav)
-            nombre = os.path.basename(ruta_completa)
-            partes = nombre.split('_')
-            if len(partes) >= 2:
-                etiqueta = partes[1]  # Segunda parte suele ser R, I, A, S, E, C
-            else:
-                etiqueta = "?"
-
-            datos.append({
-                'archivo': nombre,
-                'mfcc_mean': np.mean(mfcc),
-                'chroma_mean': np.mean(chroma),
-                'centroid_mean': np.mean(centroid),
-                'bandwidth_mean': np.mean(bandwidth),
-                'rms_mean': np.mean(rms),
-                'pitch_mean': np.mean(pitch[pitch > 0]),
-                'etiqueta_RIASEC': etiqueta
-            })
-
-# Guardar como CSV
-df = pd.DataFrame(datos)
-df.to_csv('data/dataset_riasec_etiquetas.csv', index=False)
-print("✅ Dataset generado: data/dataset_riasec_etiquetas.csv")
-print(df.head())
+# Guardar
+df_final.to_csv(csv_path, index=False)
+print(f"✅ Dataset actualizado: {len(df_nuevo)} nuevos audios añadidos.")

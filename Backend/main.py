@@ -4,7 +4,7 @@ import os
 from collections import defaultdict
 
 # Carpeta de grabaciones
-carpeta_base = "data/grabaciones"
+carpeta_base = "Backend/data/grabaciones"
 respuestas = defaultdict(int)
 
 # Recorremos preguntas por bloque y tipo

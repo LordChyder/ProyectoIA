@@ -12,7 +12,7 @@ import pandas as pd
 duracion = 5
 modelo_whisper = whisper.load_model("base")
 modelo_emocional = joblib.load("model/modelo_riasec.pkl")  # Cargamos tu modelo original
-grabaciones_dir = "data/grabaciones_test_final"
+grabaciones_dir = "backend/data/grabaciones_test_final"
 os.makedirs(grabaciones_dir, exist_ok=True)
 
 puntajes_riasec = {"R": 0, "I": 0, "A": 0, "S": 0, "E": 0, "C": 0}
