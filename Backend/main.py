@@ -4,7 +4,7 @@ from model.predict import predecir_tipo
 import os
 
 # Carpeta donde se guardan las grabaciones
-carpeta_base = "data/grabaciones"
+carpeta_base = "Backend/data/grabaciones"
 
 # Recorrer por bloque y tipo RIASEC
 for bloque, categorias in bloques_preguntas.items():  # ✅ FUNCIONA
